@@ -43,17 +43,23 @@ class EveMarketerPriceProvider implements IPriceProviderBackend
                 'User-Agent' => $user_agent,
             ]
         ]);
+        $query_base = [];
+        if($configuration['region']){
+            $query_base['regionlimit'] = $configuration['region'];
+        }
+        if($configuration['system']){
+            $query_base['usesystem'] = $configuration['system'];
+        }
 
         // step 3: evemarketer requests
         // since evemarketer has a 200 typeIDs/request limit, chunk if necessary
         collect(array_keys($typeIDs))
             ->chunk(200)
-            ->each(function ($chunk) use ($client, $configuration, &$typeIDs){
+            ->each(function ($chunk) use ($client, $configuration, &$typeIDs, $query_base){
                 try {
+                    $query_base['typeid'] = implode(',',$chunk->toArray());
                     $response = $client->post('/ec/marketstat/json?typeid=1,2', [
-                        'query'=>[
-                            'typeid'=>implode(',',$chunk->toArray())
-                        ]
+                        'query'=>$query_base
                     ]);
                     //dd(str($response->getBody()));
                     $response = json_decode($response->getBody(), false, 64, JSON_THROW_ON_ERROR);

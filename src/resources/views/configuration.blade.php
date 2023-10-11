@@ -46,9 +46,88 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label>Location</label>
+
+                    <div class="input-group mb-1">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="radio" name="location" id="universe" value="universe" @checked($is_universe)>
+                            </div>
+                            <label for="universe" class="input-group-text" style="width: 5rem">Universe</label>
+                        </div>
+                        <span class="form-control">New Eden</span>
+                    </div>
+                    <div class="input-group mb-1">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="radio" name="location" id="system" value="system" @checked($system!==null)>
+                            </div>
+                            <label for="system" class="input-group-text" style="width: 5rem">System</label>
+                        </div>
+                        <div class="form-control p-0">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <select class="w-100" style="border: none;" name="system" id="system-select">
+                                    @if($system)
+                                        <option value="{{ $system->system_id }}" selected>{{ $system->name }}</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-1">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="radio" name="location" id="region" value="region" @checked($region!==null)>
+                            </div>
+                            <label for="region" class="input-group-text" style="width: 5rem">Region</label>
+                        </div>
+                        <div class="form-control p-0">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <select class="w-100" style="border: none;" name="region" id="region-select">
+                                    @if($region)
+                                        <option value="{{ $region->region_id }}" selected>{{ $region->name }}</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <button type="submit" class="btn btn-primary">{{ trans('pricescore::priceprovider.save')  }}</button>
             </form>
         </div>
     </div>
-
 @endsection
+
+@push('javascript')
+    <script>
+        $('#system-select')
+            .select2({
+                placeholder: 'Select a system',
+                ajax: {
+                    url: '{{ route('seatcore::fastlookup.systems') }}',
+                    dataType: 'json',
+                    cache: true,
+                }
+            });
+        $('#region-select')
+            .select2({
+                placeholder: 'Select a region',
+                ajax: {
+                    url: '{{ route('seatcore::fastlookup.regions') }}',
+                    dataType: 'json',
+                    cache: true,
+                }
+            });
+    </script>
+@endpush
+
+@push('head')
+    <style>
+        .select2-selection {
+            border: none !important;
+        }
+    </style>
+@endpush
