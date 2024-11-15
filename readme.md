@@ -1,4 +1,7 @@
 # seat-prices-evemarketer
+
+NOTE: evemarketer.com seems to have shut down. Please consider one of the [alternatives](https://eveseat.github.io/docs/community_packages/#price-provider-packages).
+
 Prices from [evemarketer.com](https://evemarketer.com) for the seat-prices-core price provider system.
 
 
